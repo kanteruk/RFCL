@@ -1,4 +1,3 @@
-
 { *********************************************************************** }
 { Copyright (c) 2007-2024 Digital Lion Solutions. All rights rezerved.    }
 { Author: Ruslan Kanteruk                                                 }
@@ -819,4 +818,5 @@ begin
 end;
 
 end.
+
 
