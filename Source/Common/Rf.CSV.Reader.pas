@@ -1,10 +1,10 @@
-﻿unit Rf.CSV.Reader;
-
 { *********************************************************************** }
 { Copyright (c) 2010-2024 Digital Lion Solutions. All rights rezerved.    }
 { Author: Ruslan Kanteruk                                                 }
 { E-Mail: kanteruk@gmail.com                                              }
 { *********************************************************************** }
+
+ unit Rf.CSV.Reader;
 
 interface
 
@@ -318,3 +318,4 @@ begin
 end;
 
 end.
+
