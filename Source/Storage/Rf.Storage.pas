@@ -1,12 +1,9 @@
-{ *************************************************************************** }
-{                                                                             }
-{                  RFCL (Rfynther Component Library)                          }
-{                                                                             }
-{ Copyright © 2007-2024 Digital Lion Solutions. All right rezerved.           }
-{ Author: Ruslan Kanteruk                                                     }
-{ E-Mail: kanteruk@gmail.com                                                  }
-{                                                                             }
-{ *************************************************************************** }
+
+{ *********************************************************************** }
+{ Copyright (c) 2007-2024 Digital Lion Solutions. All rights rezerved.    }
+{ Author: Ruslan Kanteruk                                                 }
+{ E-Mail: kanteruk@gmail.com                                              }
+{ *********************************************************************** }
 
 unit Rf.Storage;
 
@@ -822,3 +819,4 @@ begin
 end;
 
 end.
+
