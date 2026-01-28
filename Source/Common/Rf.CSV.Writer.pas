@@ -2,6 +2,7 @@
 
 { *********************************************************************** }
 { Copyright (c) 2010-2020 Digital Lion Solutions. All rights rezerved.    }
+{ Author: Ruslan Kanteruk                                                 }
 { E-Mail: kanteruk@gmail.com                                              }
 { *********************************************************************** }
 
@@ -88,3 +89,4 @@ begin
 end;
 
 end.
+
