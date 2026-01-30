@@ -34,7 +34,6 @@ type
   public
     constructor Create(AStrem: TStream); overload;
     constructor Create(const AFileName: TFileName; const AAppend: Boolean = False); overload;
-
     destructor Destroy; override;
     property Writer: TStreamWriter read FWriter;
     procedure WriteLine(const AJSON: string); overload; inline;
@@ -115,3 +114,4 @@ begin
 end;
 
 end.
+
