@@ -1,4 +1,4 @@
-﻿{ *********************************************************************** }
+{ *********************************************************************** }
 { Copyright (c) 2020-2026 Digital Lion Solutions. All rights rezerved.    }
 { Author: Ruslan Kanteruk                                                 }
 { E-Mail: kanteruk@gmail.com                                              }
@@ -24,6 +24,7 @@ type
     function ReadLine: Boolean; inline;
     property Line: string read FLine; // current readed line after call ReadLine
     function GetJSON(var AJSON: TJSONObject): Boolean; // ReadLine and Parse to JSON
+    procedure Rewind;
   end;
 
   TJSONLWriter = class
@@ -58,6 +59,12 @@ destructor TJSONLReader.Destroy;
 begin
   FReader.Free;
   inherited;
+end;
+
+procedure TJSONLReader.Rewind;
+begin
+  FReader.Rewind;
+  FLine := '';
 end;
 
 function TJSONLReader.ReadLine: Boolean;
