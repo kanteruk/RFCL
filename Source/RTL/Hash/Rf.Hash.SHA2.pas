@@ -124,6 +124,7 @@ begin
   FLength := 0;
 end;
 
+{$POINTERMATH ON}
 procedure THashSHA256.UpdateBlock(const Block: Pointer);
 const
   K256: array[0..63] of DWORD = (
@@ -135,6 +136,15 @@ const
    $A2BFE8A1, $A81A664B, $C24B8B70, $C76C51A3, $D192E819, $D6990624, $F40E3585, $106AA070,
    $19A4C116, $1E376C08, $2748774C, $34B0BCB5, $391C0CB3, $4ED8AA4A, $5B9CCA4F, $682E6FF3,
    $748F82EE, $78A5636F, $84C87814, $8CC70208, $90BEFFFA, $A4506CEB, $BEF9A3F7, $C67178F2);
+
+  function Ch_(X, Y, Z: Cardinal): Cardinal; inline;
+  begin
+    Result := (X and Y) xor ((not X) and Z);
+  end;
+  function Maj(X, Y, Z: Cardinal): Cardinal; inline;
+  begin
+    Result := (X and Y) xor (X and Z) xor (Y and Z);
+  end;
 
 type
   TArray16UINT = array[0..15] of DWORD;
@@ -167,10 +177,8 @@ begin
 
   for i := 0 to 63 do
   begin
-    t1 := H + ((RotateRight(E, 6) xor RotateRight(E, 11) xor RotateRight(E, 25))) +
-      ((E and F) xor ((not E) and G)) + K256[i] + W[i];
-    t2 := (RotateRight(A, 2) xor RotateRight(A, 13) xor RotateRight(A, 22)) +
-      ((A and B) xor (A and C) xor (B and C));
+    t1 := H + ((RotateRight(E, 6) xor RotateRight(E, 11) xor RotateRight(E, 25))) + Ch_(E, F, G) + K256[i] + W[i];
+    t2 := (RotateRight(A, 2) xor RotateRight(A, 13) xor RotateRight(A, 22)) + Maj(A, B, C);
     H := G;
     G := F;
     F := E;
@@ -271,6 +279,7 @@ begin
   FLength := 0;
 end;
 
+{$POINTERMATH ON}
 procedure THashSHA512.UpdateBlock(const Block: Pointer);
 const
   K512: array[0..79] of UInt64 = (
@@ -294,13 +303,23 @@ const
     $06F067AA72176FBA, $0A637DC5A2C898A6, $113F9804BEF90DAE, $1B710B35131C471B,
     $28DB77F523047D84, $32CAAB7B40C72493, $3C9EBE0A15C9BEBC, $431D67C49C100D4C,
     $4CC5D4BECB3E42B6, $597F299CFC657E2A, $5FCB6FAB3AD6FAEC, $6C44198C4A475817);
+
+  function Ch_(X, Y, Z: UInt64): UInt64; inline;
+  begin
+    Result := (X and Y) xor ((not X) and Z);
+  end;
+  function Maj(X, Y, Z: UInt64): UInt64; inline;
+  begin
+    Result := (X and Y) xor (X and Z) xor (Y and Z);
+  end;
+
 type
   TArray16UInt64 = array[0..15] of UInt64;
 var
   A, B, C, D, E, F, G, H: UInt64;
   W: array[0..79] of UInt64;
   t0, t1, s0, s1: UInt64;
-  i: Cardinal;
+  i: Integer;
 begin
   Inc(FLength, FBlockSize);
 
@@ -324,10 +343,8 @@ begin
   end;
   for i := 0 to 79 do
   begin
-    t0 := H + ((RotateRight(E, 14) xor RotateRight(E, 18) xor RotateRight(E, 41))) +
-      ((E and F) xor ((not E) and G)) + K512[i] + W[i];
-    t1 := ((RotateRight(A, 28) xor RotateRight(A, 34) xor RotateRight(A, 39))) +
-      ((A and B) xor (A and C) xor (B and C));
+    t0 := H + ((RotateRight(E, 14) xor RotateRight(E, 18) xor RotateRight(E, 41))) + Ch_(E, F, G) + K512[i] + W[i];
+    t1 := ((RotateRight(A, 28) xor RotateRight(A, 34) xor RotateRight(A, 39))) + Maj(A, B, C);
     H := G;
     G := F;
     F := E;
