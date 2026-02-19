@@ -356,16 +356,12 @@ begin
       Update(Memory, Size)
   else begin
     SetLength(Buffer, BufferSize);
-    try
-      while True do
-      begin
-        CountRead := Stream.Read(Buffer[0], BufferSize);
-        if CountRead = 0 then
-          Break;
-        Update(@Buffer[0], CountRead);
-      end;
-    finally
-      SetLength(Buffer,0);
+    while True do
+    begin
+      CountRead := Stream.Read(Buffer[0], BufferSize);
+      if CountRead = 0 then
+        Break;
+      Update(@Buffer[0], CountRead);
     end;
   end;
   Finalize;

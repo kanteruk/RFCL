@@ -8,7 +8,7 @@ unit Rf.Hash.Adler;
 
 interface
 
-uses System.Types, Sysytem.SysUtils, Rf.Hash;
+uses System.Types, System.SysUtils, Rf.Hash;
 
 type
 
