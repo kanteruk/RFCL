@@ -1,0 +1,13 @@
+__history
+__recovery
+*.dcu
+*.~*
+*.o
+*.dsm
+*.ddp
+*.map
+*.identcache
+*.local
+*.stat
+*.skincfg
+
