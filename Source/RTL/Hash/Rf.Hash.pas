@@ -48,27 +48,27 @@ type
     /// </summary>
     procedure CalcOfBuffer(const AData: Pointer; const ASize: Cardinal);
     /// <summary>
-    /// Calculate Hash Value Of string
+    /// Calculate Hash Value Of Bytes
     /// </summary>
-    procedure CalcOfString(const S: string); overload;
-    {$IFNDEF NEXTGEN}
-    procedure CalcOfStringA(const S: AnsiString);
-    procedure CalcOfStringW(const S: WideString);
-    {$ENDIF}
-    procedure CalcOfString(const S: RawByteString); overload;
+    procedure CalcOfBytes(const ABytes: TBytes);
     procedure CalcOfStream(const Stream: TStream); virtual;
     procedure CalcOfFile(const AFileName: TFileName);
-    procedure CalcOfBytes(const ABytes: TBytes);
+    /// <summary>
+    /// Calculate Hash Value Of string (UTF8 encoding)
+    /// </summary>
+    procedure CalcOfString(const S: string); overload;
+    /// <summary>
+    /// Calculate Hash Value Of RawByteString
+    /// </summary>
+    procedure CalcOfString(const S: RawByteString); overload;
 
     { Calculate Hash Of ... }
     class function OfBuffer(const AData: Pointer; const ASize: Cardinal): TBytes;
-    class function OfString(const S: string): TBytes;
-    {$IFNDEF NEXTGEN}
-    class function OfStringA(const S: AnsiString): TBytes;
-    class function OfStringW(const S: WideString): TBytes;
-    {$ENDIF}
+    class function OfBytes(const ABytes: TBytes): TBytes;
     class function OfStream(const Stream: TStream): TBytes;
     class function OfFile(const AFileName: TFileName): TBytes;
+    class function OfString(const S: string): TBytes; overload;
+    class function OfString(const S: RawByteString): TBytes; overload;
   end;
 
   THashClass = class of THash;
@@ -108,7 +108,7 @@ end;
 
 procedure THash.BeforeDestruction;
 begin
-  System.Finalize(FValue);
+  //System.Finalize(FValue);
   inherited;
 end;
 
@@ -193,32 +193,22 @@ begin
   Finalize;
 end;
 
+procedure THash.CalcOfBytes(const ABytes: TBytes);
+begin
+  Initialize;
+  Update(ABytes);
+  Finalize;
+end;
+
 procedure THash.CalcOfString(const S: string);
 begin
-  CalcOfBuffer(PChar(S), Length(S) * SizeOf(Char));
+  CalcOfBytes(TEncoding.UTF8.GetBytes(S));
 end;
-
-{$IFNDEF NEXTGEN}
-procedure THash.CalcOfStringA(const S: AnsiString);
-begin
-  CalcOfBuffer(PAnsiChar(S), Length(S) * SizeOf(AnsiChar));
-end;
-
-procedure THash.CalcOfStringW(const S: WideString);
-begin
-  CalcOfBuffer(PWideChar(S), Length(S) * SizeOf(WideChar));
-end;
-{$ENDIF}
 
 procedure THash.CalcOfString(const S: RawByteString);
 begin
 //  CalcOfBuffer(PRawByteString(S), Length(S)); // PRawByteString(S) - its pointer to refc  counter
   CalcOfBuffer(PAnsiChar(S), Length(S));
-end;
-
-procedure THash.CalcOfBytes(const ABytes: TBytes);
-begin
-  CalcOfBuffer(@ABytes[0], Length(ABytes));
 end;
 
 procedure THash.CalcOfStream(const Stream: TStream);
@@ -268,40 +258,16 @@ begin
   end;
 end;
 
-class function THash.OfString(const S: string): TBytes;
+class function THash.OfBytes(const ABytes: TBytes): TBytes;
 begin
   with Create do
   try
-    CalcOfString(S);
+    CalcOfBytes(ABytes);
     Result := Value;
   finally
     Free;
   end;
 end;
-
-{$IFNDEF NEXTGEN}
-class function THash.OfStringA(const S: AnsiString): TBytes;
-begin
-  with Create do
-  try
-    CalcOfStringA(S);
-    Result := Value;
-  finally
-    Free;
-  end;
-end;
-
-class function THash.OfStringW(const S: WideString): TBytes;
-begin
-  with Create do
-  try
-    CalcOfStringW(S);
-    Result := Value;
-  finally
-    Free;
-  end;
-end;
-{$ENDIF}
 
 class function THash.OfStream(const Stream: TStream): TBytes;
 begin
@@ -319,6 +285,28 @@ begin
   with Create do
   try
     CalcOfFile(AFileName);
+    Result := Value;
+  finally
+    Free;
+  end;
+end;
+
+class function THash.OfString(const S: string): TBytes;
+begin
+  with Create do
+  try
+    CalcOfString(S);
+    Result := Value;
+  finally
+    Free;
+  end;
+end;
+
+class function THash.OfString(const S: RawByteString): TBytes;
+begin
+  with Create do
+  try
+    CalcOfString(S);
     Result := Value;
   finally
     Free;
@@ -380,36 +368,8 @@ var
   i: Cardinal;
   BufFree: Cardinal;
   PBuffer: PByte;
-{  LSize: LongWord;
-  Count: Integer;
-  LBufLen: Cardinal;
-  LRest: Integer;  }
 begin
   PBuffer := AData;
-{
-  LSize := ASize;
-  LBufLen := BlockSize;
-  // Code Option A
-  Count := (LSize + FUsedBuffer) div LBufLen;
-  if Count > 0  then
-  begin
-    LRest := LBufLen - FUsedBuffer;
-    Move(PBuffer^, FBlockBuffer[FUsedBuffer], LRest);
-    Inc(PBuffer, LRest);
-    Dec(LSize, LRest);
-    UpdateBlock(@FBlockBuffer[0]);
-    for I := 1 to Count - 1 do
-    begin
-      Move(PBuffer^, FBlockBuffer[0], LBufLen);
-      Inc(PBuffer, LBufLen);
-      Dec(LSize, LBufLen);
-      UpdateBlock(@FBlockBuffer[0]);
-    end;
-    FUsedBuffer := 0;
-  end;
-  Move(PBuffer^, FBlockBuffer[FUsedBuffer], LSize);
-  Inc(FUsedBuffer, LSize);
-exit; }
 
   BufFree := FBlockSize - FUsedBuffer;
   if ASize >= BufFree then
