@@ -365,9 +365,9 @@ end;
 {$POINTERMATH ON}
 procedure TBlockHash.Update(const AData: Pointer; const ASize: Cardinal);
 var
-  i: Cardinal;
-  BufFree: Cardinal;
   PBuffer: PByte;
+  Remind: Cardinal;
+  BufFree: Cardinal;
 begin
   PBuffer := AData;
 
@@ -381,15 +381,17 @@ begin
       Move(PBuffer^, FBlockBuffer[FUsedBuffer], BufFree);
       UpdateBlock(@FBlockBuffer[0]);
     end;
-    i := BufFree;
-    while i + FBlockSize <= ASize do
+    Inc(PBuffer, BufFree);
+    Remind := ASize - BufFree;
+    while Remind >= FBlockSize do
     begin
-      UpdateBlock(Pointer(PBuffer + i));
-      Inc(i, FBlockSize);
+      UpdateBlock(PBuffer);
+      Inc(PBuffer, FBlockSize);
+      Dec(Remind, FBlockSize);
     end;
-    FUsedBuffer := ASize - i;
+    FUsedBuffer := Remind;
     if FUsedBuffer > 0 then
-      Move(Pointer(PBuffer + i)^, FBlockBuffer[0], FUsedBuffer);
+      Move(PBuffer^, FBlockBuffer[0], FUsedBuffer);
   end
   else begin
     Move(PBuffer^, FBlockBuffer[FUsedBuffer], ASize);
