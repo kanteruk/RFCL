@@ -8,7 +8,7 @@ unit Rf.Hash.Panama;
 
 interface
 
-uses Rf.Types, Rf.SysUtils, Rf.Hash;
+uses Rf.Types, Rf.Hash;
 
 type
 

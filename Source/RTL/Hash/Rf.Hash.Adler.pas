@@ -17,6 +17,8 @@ type
   THashAdler8 = class(THash)
   private
     FContext: DWORD;
+  const
+    Adler8Base = $0D;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -31,6 +33,8 @@ type
   THashAdler16 = class(THash)
   private
     FContext: DWORD;
+  const
+    Adler16Base = $FB;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -45,6 +49,8 @@ type
   THashAdler32 = class(THash)
   private
     FContext: DWORD;
+  const
+    Adler32Base = $FFF1;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -55,11 +61,6 @@ type
   end;
 
 implementation
-
-const
-  Adler8Base = $0D;
-  Adler16Base = $FB;
-  Adler32Base = $FFF1;
 
 { THashAdler8 }
 
@@ -165,25 +166,64 @@ begin
   FContext := 1;
 end;
 
+{$POINTERMATH ON}
 procedure THashAdler32.Update(const Buffer: Pointer; const Size: Cardinal);
+const
+  NMax = 5552;
 var
-  i: Integer;
-  v: Int64;
+//  i: Integer;
+//  v: DWORD;
+  //Lo, Hi: Word;
+  LPtrBuf: PByte;
+  Remaining: Cardinal;
+  n: Cardinal;
+  Lo, Hi: Cardinal;
 begin
-  with LongRec(FContext) do
-    for i := 0 to Size - 1 do
+  Lo := LongRec(FContext).Lo;
+  Hi := LongRec(FContext).Hi;
+
+//// orinal code:
+//  for i := 0 to Size - 1 do
+//  begin
+//    Lo := (Lo + PByteArray(Buffer)[i]) mod Adler32Base;
+//    Hi := (Hi + Lo) mod Adler32Base;
+//  end;
+
+{  for i := 0 to Size - 1 do
+  begin
+    v := Lo + PByteArray(Buffer)[i];
+    while v >= Adler32Base do Dec(v, Adler32Base);
+    Lo := v;
+
+    v := Hi + Lo;
+    while v >= Adler32Base do Dec(v, Adler32Base);
+    Hi := v;
+  end;}
+
+  // optimized
+  LPtrBuf := Buffer;
+  Remaining := Size;
+  while Remaining > 0 do
+  begin
+    if Remaining > NMax then
+      N := NMax
+    else
+      N := Remaining;
+    Dec(Remaining, N);
+
+    while N > 0 do
     begin
-{        Lo := (Lo + PByteArray(Buffer)[i]) mod Adler32Base;
-      Hi := (Hi + Lo) mod Adler32Base;}
-
-      v := Lo + PByteArray(Buffer)[i];
-      while v >= Adler32Base do Dec(v, Adler32Base);
-      Lo := v;
-
-      v := Hi + Lo;
-      while v >= Adler32Base do Dec(v, Adler32Base);
-      Hi := v;
+      Inc(Lo, LPtrBuf^);
+      Inc(Hi, Lo);
+      Inc(LPtrBuf);
+      Dec(N);
     end;
+    Lo := Lo mod Adler32Base;
+    Hi := Hi mod Adler32Base;
+  end;
+
+  LongRec(FContext).Lo := Lo;
+  LongRec(FContext).Hi := Hi;
 end;
 
 procedure THashAdler32.Finalize;

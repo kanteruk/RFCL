@@ -8,7 +8,7 @@ unit Rf.Hash.HAVAL;
 
 interface
 
-uses Rf.Types, Rf.SysUtils, Rf.Hash;
+uses Rf.Types, Rf.Hash;
 
 type
   THashHAVALSize = (hhs128bit, hhs160bit, hhs192bit, hhs224bit, hhs256bit);

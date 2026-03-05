@@ -8,7 +8,7 @@ unit Rf.Hash.SHA3;
 
 interface
 
-uses Rf.SysUtils, Rf.Hash, Rf.Hash.Keccak;
+uses System.SysUtils, Rf.Hash, Rf.Hash.Keccak;
 
 type
 

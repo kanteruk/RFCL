@@ -14,6 +14,8 @@ uses System.SysUtils, System.Classes, Rf.SysUtils;
 
 type
 
+  TBytes = System.SysUtils.TBytes;
+
   THashType = (Checksum, Cryptographic);
 
   /// <summary>

@@ -8,7 +8,7 @@ unit Rf.Hash.SHA0;
 
 interface
 
-uses Rf.Types, Rf.SysUtils, Rf.Hash;
+uses System.SysUtils, Rf.Types, Rf.Hash;
 
 type
 

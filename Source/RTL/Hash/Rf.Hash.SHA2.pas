@@ -8,7 +8,7 @@ unit Rf.Hash.SHA2;
 
 interface
 
-uses Rf.Types, Rf.SysUtils, Rf.Hash;
+uses Rf.Types, Rf.Hash;
 
 type
 
@@ -145,6 +145,11 @@ const
   begin
     Result := (X and Y) xor (X and Z) xor (Y and Z);
   end;
+  function RotateRight(x: Cardinal; n: Byte): Cardinal; inline;
+  begin
+    Result := (x shl (32 - n) or (x shr n));
+  end;
+
 
 type
   TArray16UINT = array[0..15] of DWORD;

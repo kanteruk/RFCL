@@ -8,7 +8,7 @@ unit Rf.Hash.HAS160;
 
 interface
 
-uses Rf.Types, Rf.SysUtils, Rf.Hash;
+uses Rf.Types, Rf.Hash;
 
 type
 
