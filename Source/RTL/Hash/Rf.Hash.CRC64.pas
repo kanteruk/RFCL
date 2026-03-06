@@ -65,14 +65,20 @@ end;
 procedure TCRC64.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-//  tmp: TCRC64;
+{  P: PByte;
+  LC: UInt64;}
 begin
   for i := 0 to Size - 1 do
     FContext := (FContext shr 8) xor Table[(FContext xor PByteArray(Buffer)[i]) and $FF];
-{  tmp := FContext;
+
+{  P := Buffer;
+  LC := FContext;
   for i := 0 to Size - 1 do
-    tmp := (tmp shr 8) xor Table[(tmp xor PByteArray(Buffer)[i]) and $FF];
-  FContext := tmp;}
+  begin
+    LC := (LC shr 8) xor Table[(LC xor P^) and $FF];
+    Inc(P);
+  end;
+  FContext := LC;}
 end;
 
 procedure TCRC64.Finalize;

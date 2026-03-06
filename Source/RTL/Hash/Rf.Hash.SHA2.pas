@@ -145,7 +145,7 @@ const
   begin
     Result := (X and Y) xor (X and Z) xor (Y and Z);
   end;
-  function RotateRight(x: Cardinal; n: Byte): Cardinal; inline;
+  function ROR(x: Cardinal; n: Byte): Cardinal; inline;
   begin
     Result := (x shl (32 - n) or (x shr n));
   end;
@@ -175,15 +175,15 @@ begin
 
   for i := 16 to 63 do
   begin
-    s0 := RotateRight(W[i-15], 7) xor RotateRight(W[i-15], 18) xor (W[i-15] shr 3);
-    s1 := RotateRight(W[i-2], 17) xor RotateRight(W[i-2], 19) xor (W[i-2] shr 10);
+    s0 := ROR(W[i-15], 7) xor ROR(W[i-15], 18) xor (W[i-15] shr 3);
+    s1 := ROR(W[i-2], 17) xor ROR(W[i-2], 19) xor (W[i-2] shr 10);
     W[i] := W[i-16] + s0 + W[i-7] + s1;
   end;
 
   for i := 0 to 63 do
   begin
-    t1 := H + ((RotateRight(E, 6) xor RotateRight(E, 11) xor RotateRight(E, 25))) + Ch_(E, F, G) + K256[i] + W[i];
-    t2 := (RotateRight(A, 2) xor RotateRight(A, 13) xor RotateRight(A, 22)) + Maj(A, B, C);
+    t1 := H + ((ROR(E, 6) xor ROR(E, 11) xor ROR(E, 25))) + Ch_(E, F, G) + K256[i] + W[i];
+    t2 := (ROR(A, 2) xor ROR(A, 13) xor ROR(A, 22)) + Maj(A, B, C);
     H := G;
     G := F;
     F := E;
@@ -317,6 +317,11 @@ const
   begin
     Result := (X and Y) xor (X and Z) xor (Y and Z);
   end;
+  function ROR(x: UInt64; n: Byte): UInt64; inline;
+  begin
+    Result := (x shl (64 - n)) or (x shr n);
+  end;
+
 
 type
   TArray16UInt64 = array[0..15] of UInt64;
@@ -342,14 +347,14 @@ begin
 
   for i := 16 to 79 do
   begin
-    s0 := (RotateRight(W[i - 15], 1) xor RotateRight(W[i - 15], 8) xor (W[i - 15] shr 7));
-    s1 := (RotateRight(W[i - 2], 19) xor RotateRight(W[i - 2], 61) xor (W[i - 2] shr 6));
+    s0 := (ROR(W[i - 15], 1) xor ROR(W[i - 15], 8) xor (W[i - 15] shr 7));
+    s1 := (ROR(W[i - 2], 19) xor ROR(W[i - 2], 61) xor (W[i - 2] shr 6));
     W[i] := s1 + W[i - 7] + s0 + W[i - 16];
   end;
   for i := 0 to 79 do
   begin
-    t0 := H + ((RotateRight(E, 14) xor RotateRight(E, 18) xor RotateRight(E, 41))) + Ch_(E, F, G) + K512[i] + W[i];
-    t1 := ((RotateRight(A, 28) xor RotateRight(A, 34) xor RotateRight(A, 39))) + Maj(A, B, C);
+    t0 := H + ((ROR(E, 14) xor ROR(E, 18) xor ROR(E, 41))) + Ch_(E, F, G) + K512[i] + W[i];
+    t1 := ((ROR(A, 28) xor ROR(A, 34) xor ROR(A, 39))) + Maj(A, B, C);
     H := G;
     G := F;
     F := E;

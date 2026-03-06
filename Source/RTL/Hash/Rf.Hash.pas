@@ -10,7 +10,7 @@ unit Rf.Hash;
 
 interface
 
-uses System.SysUtils, System.Classes, Rf.SysUtils;
+uses System.SysUtils, System.Classes, Rf.SysUtils, Rf.Types;
 
 type
 
@@ -35,7 +35,6 @@ type
     class procedure ToBigEndian8(const InBuffer: array of UInt64; var OutBuffer: TBytes); static;
   public
     procedure AfterConstruction; override;
-    procedure BeforeDestruction; override;
 
     class function HashType: THashType; virtual; abstract;
     function HashSize: Cardinal; virtual; abstract;
@@ -100,18 +99,14 @@ type
 
 implementation
 
+{$POINTERMATH ON}
+
 { THash }
 
 procedure THash.AfterConstruction;
 begin
   inherited;
   SetLength(FValue, HashSize);
-end;
-
-procedure THash.BeforeDestruction;
-begin
-  //System.Finalize(FValue);
-  inherited;
 end;
 
 procedure THash.Update(const AData; const ASize: Cardinal);
@@ -146,34 +141,31 @@ end;
 
 class procedure THash.ToBigEndian4(const InBuffer: array of Cardinal; var OutBuffer: TBytes);
 var
-  i, v: Integer;
+  Src, Dst: PCardinal;
+  i: Integer;
 begin
+  Src := @InBuffer[0];
+  Dst := PCardinal(@OutBuffer[0]);
   for i := 0 to High(OutBuffer) shr 2 do
   begin
-    v := i shl 2;
-    OutBuffer[v + 0] := LongRec(InBuffer[i]).Bytes[3];
-    OutBuffer[v + 1] := LongRec(InBuffer[i]).Bytes[2];
-    OutBuffer[v + 2] := LongRec(InBuffer[i]).Bytes[1];
-    OutBuffer[v + 3] := LongRec(InBuffer[i]).Bytes[0];
-    //PCardinal(@OutBuffer[v + 0])^ := SwapEndian(InBuffer[i]);
+    Dst^ := SwapEndian(Src^);
+    Inc(Src);
+    Inc(Dst);
   end;
 end;
 
 class procedure THash.ToBigEndian8(const InBuffer: array of UInt64; var OutBuffer: TBytes);
 var
-  i, v: Integer;
+  Src, Dst: PUInt64;
+  i: Integer;
 begin
+  Src := @InBuffer[0];
+  Dst := PUInt64(@OutBuffer[0]);
   for i := 0 to High(OutBuffer) shr 3 do
   begin
-    v := i shl 3;
-    OutBuffer[v + 0] := Int64Rec(InBuffer[i]).Bytes[7];
-    OutBuffer[v + 1] := Int64Rec(InBuffer[i]).Bytes[6];
-    OutBuffer[v + 2] := Int64Rec(InBuffer[i]).Bytes[5];
-    OutBuffer[v + 3] := Int64Rec(InBuffer[i]).Bytes[4];
-    OutBuffer[v + 4] := Int64Rec(InBuffer[i]).Bytes[3];
-    OutBuffer[v + 5] := Int64Rec(InBuffer[i]).Bytes[2];
-    OutBuffer[v + 6] := Int64Rec(InBuffer[i]).Bytes[1];
-    OutBuffer[v + 7] := Int64Rec(InBuffer[i]).Bytes[0];
+    Dst^ := SwapEndian(Src^);
+    Inc(Src);
+    Inc(Dst);
   end;
 end;
 
@@ -364,7 +356,6 @@ begin
 //  FBlockSize := BlockSize;
 end;
 
-{$POINTERMATH ON}
 procedure TBlockHash.Update(const AData: Pointer; const ASize: Cardinal);
 var
   PBuffer: PByte;

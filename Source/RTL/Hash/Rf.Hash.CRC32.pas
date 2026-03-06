@@ -1,4 +1,4 @@
-{ *********************************************************************** }
+﻿{ *********************************************************************** }
 { Copyright (c) 2010-2011 Digital Lion Solutions. All rights rezerved.    }
 { Author: Ruslan Kanteruk                                                 }
 { E-Mail: kanteruk@gmail.com                                              }
@@ -8,7 +8,7 @@ unit Rf.Hash.CRC32;
 
 interface
 
-uses System.Types, System.SysUtils, Rf.Hash;
+uses System.SysUtils, Rf.Hash, Rf.Types;
 
 type
 
@@ -22,6 +22,7 @@ type
   public
     class function HashType: THashType; override;
     function HashSize: Cardinal; override;
+    procedure Finalize; override;
   end;
 
   /// <summary>
@@ -40,7 +41,6 @@ type
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
-    procedure Finalize; override;
   end;
 
   /// <summary>
@@ -57,7 +57,6 @@ type
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
-    procedure Finalize; override;
   end;
 
 implementation
@@ -91,6 +90,19 @@ begin
   end;
 end;
 
+procedure THashCRC32Abstract.Finalize;
+begin
+  FContext := FContext xor $FFFFFFFF;
+  //PCardinal(@FValue[0])^ := SwapEndian(FContext);
+  with LongRec(FContext) do
+  begin
+    FValue[0] := Bytes[3];
+    FValue[1] := Bytes[2];
+    FValue[2] := Bytes[1];
+    FValue[3] := Bytes[0];
+  end;
+end;
+
 { TCRC32 }
 
 procedure TCRC32.Initialize;
@@ -116,18 +128,6 @@ begin
   FContext := tmp;
 end;
 
-procedure TCRC32.Finalize;
-begin
-  FContext := FContext xor $FFFFFFFF;
-  with LongRec(FContext) do
-  begin
-    FValue[0] := Bytes[3];
-    FValue[1] := Bytes[2];
-    FValue[2] := Bytes[1];
-    FValue[3] := Bytes[0];
-  end;
-end;
-
 { TCRC32C }
 
 procedure TCRC32C.Initialize;
@@ -151,18 +151,6 @@ begin
   for i := 0 to Size - 1 do
     tmp := (tmp shr 8) xor Table[(tmp xor PByteArray(Buffer)[i]) and $FF];
   FContext := tmp;
-end;
-
-procedure TCRC32C.Finalize;
-begin
-  FContext := FContext xor $FFFFFFFF;
-  with LongRec(FContext) do
-  begin
-    FValue[0] := Bytes[3];
-    FValue[1] := Bytes[2];
-    FValue[2] := Bytes[1];
-    FValue[3] := Bytes[0];
-  end;
 end;
 
 end.
