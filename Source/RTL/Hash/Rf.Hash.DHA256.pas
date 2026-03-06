@@ -155,8 +155,8 @@ begin
   for i := 1 to Len - 1 do
     Result[i] := 0;
   Result[Len+0] := Byte(LengthInBits shr 56);
-  Result[Len+1] := Byte(LengthInBits shr 58);
-  Result[Len+2] := Byte(LengthInBits shr 50);
+  Result[Len+1] := Byte(LengthInBits shr 48);
+  Result[Len+2] := Byte(LengthInBits shr 40);
   Result[Len+3] := Byte(LengthInBits shr 32);
   Result[Len+4] := Byte(LengthInBits shr 24);
   Result[Len+5] := Byte(LengthInBits shr 16);

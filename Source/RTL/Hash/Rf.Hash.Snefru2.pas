@@ -992,8 +992,8 @@ begin
 
   PadLen := PadLen + BlockSize - 8;
   Result[PadLen+0] := Byte(LengthInBits shr 56);
-  Result[PadLen+1] := Byte(LengthInBits shr 58);
-  Result[PadLen+2] := Byte(LengthInBits shr 50);
+  Result[PadLen+1] := Byte(LengthInBits shr 48);
+  Result[PadLen+2] := Byte(LengthInBits shr 40);
   Result[PadLen+3] := Byte(LengthInBits shr 32);
   Result[PadLen+4] := Byte(LengthInBits shr 24);
   Result[PadLen+5] := Byte(LengthInBits shr 16);
