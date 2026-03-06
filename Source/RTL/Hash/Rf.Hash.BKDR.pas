@@ -17,8 +17,8 @@ type
   /// </summary>
   THashBKDR = class(THash)
   private
-    FContext: LongWord;
-//    FSeed: LongWord;
+    FContext: UInt32;
+//    FSeed: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -55,7 +55,7 @@ const
 procedure THashBKDR.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: LongWord;
+  tmp: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do

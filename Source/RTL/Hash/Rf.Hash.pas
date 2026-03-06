@@ -31,7 +31,7 @@ type
     procedure Finalize; virtual; abstract;
 
     procedure SetValueFromBuffer(const Buffer: Pointer; const Size: Integer; const Inverted: Boolean = False);
-    class procedure ToBigEndian4(const InBuffer: array of Cardinal; var OutBuffer: TBytes); static;
+    class procedure ToBigEndian4(const InBuffer: array of UInt32; var OutBuffer: TBytes); static;
     class procedure ToBigEndian8(const InBuffer: array of UInt64; var OutBuffer: TBytes); static;
   public
     procedure AfterConstruction; override;
@@ -52,7 +52,7 @@ type
     /// Calculate Hash Value Of Bytes
     /// </summary>
     procedure CalcOfBytes(const ABytes: TBytes);
-    procedure CalcOfStream(const Stream: TStream); virtual;
+    procedure CalcOfStream(const Stream: TStream; BufferSize: Cardinal = 16384); virtual;
     procedure CalcOfFile(const AFileName: TFileName);
     /// <summary>
     /// Calculate Hash Value Of string (UTF8 encoding)
@@ -94,7 +94,7 @@ type
 
     function BlockSize: Cardinal; virtual; abstract; { Block size in Bytes }
 
-    procedure CalcOfStream(const Stream: TStream); override;
+    procedure CalcOfStream(const Stream: TStream; BufferSize: Cardinal = 16384); override;
   end;
 
 implementation
@@ -139,32 +139,28 @@ begin
       FValue[i] := PByteArray(Buffer)[i]}
 end;
 
-class procedure THash.ToBigEndian4(const InBuffer: array of Cardinal; var OutBuffer: TBytes);
+class procedure THash.ToBigEndian4(const InBuffer: array of UInt32; var OutBuffer: TBytes);
 var
-  Src, Dst: PCardinal;
+  Dst: PUInt32;
   i: Integer;
 begin
-  Src := @InBuffer[0];
-  Dst := PCardinal(@OutBuffer[0]);
+  Dst := PUInt32(@OutBuffer[0]);
   for i := 0 to High(OutBuffer) shr 2 do
   begin
-    Dst^ := SwapEndian(Src^);
-    Inc(Src);
+    Dst^ := SwapEndian(InBuffer[i]);
     Inc(Dst);
   end;
 end;
 
 class procedure THash.ToBigEndian8(const InBuffer: array of UInt64; var OutBuffer: TBytes);
 var
-  Src, Dst: PUInt64;
+  Dst: PUInt64;
   i: Integer;
 begin
-  Src := @InBuffer[0];
   Dst := PUInt64(@OutBuffer[0]);
   for i := 0 to High(OutBuffer) shr 3 do
   begin
-    Dst^ := SwapEndian(Src^);
-    Inc(Src);
+    Dst^ := SwapEndian(InBuffer[i]);
     Inc(Dst);
   end;
 end;
@@ -205,12 +201,10 @@ begin
   CalcOfBuffer(PAnsiChar(S), Length(S));
 end;
 
-procedure THash.CalcOfStream(const Stream: TStream);
-const
-  BufferSize = 16384; // 16Kb
+procedure THash.CalcOfStream(const Stream: TStream; BufferSize: Cardinal);
 var
   Buffer: TBytes;
-  CountRead: Integer;
+  CountRead: Cardinal;
 begin
   Initialize;
   if Stream is TMemoryStream then
@@ -322,31 +316,9 @@ begin
   inherited;
 end;
 
-procedure TBlockHash.CalcOfStream(const Stream: TStream);
-var
-  BufferSize: Cardinal;
-  Buffer: TBytes;
-  CountRead: LongInt;
+procedure TBlockHash.CalcOfStream(const Stream: TStream; BufferSize: Cardinal);
 begin
-  Initialize;
-
-  BufferSize := 16384; // 16Kb
-  BufferSize := BufferSize div BlockSize * BlockSize;
-
-  if Stream is TMemoryStream then
-    with TMemoryStream(Stream) do
-      Update(Memory, Size)
-  else begin
-    SetLength(Buffer, BufferSize);
-    while True do
-    begin
-      CountRead := Stream.Read(Buffer[0], BufferSize);
-      if CountRead = 0 then
-        Break;
-      Update(@Buffer[0], CountRead);
-    end;
-  end;
-  Finalize;
+  inherited CalcOfStream(Stream, BufferSize div BlockSize * BlockSize); // need align buffer for Block size
 end;
 
 procedure TBlockHash.Initialize;

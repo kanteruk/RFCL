@@ -17,7 +17,7 @@ type
   /// </summary>
   THashCKSum = class(THash)
   private
-    FContext: DWORD;
+    FContext: UInt32;
     FLength: UInt64;
   protected
     procedure Initialize; override;
@@ -32,7 +32,7 @@ type
 
   THashCKSumMPEG2 = class(THash)
   private
-    FContext: DWORD;
+    FContext: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -45,7 +45,7 @@ type
 implementation
 
 const
-  CKSumTable: array[Byte] of DWORD = (
+  CKSumTable: array[Byte] of UInt32 = (
     $00000000, $04C11DB7, $09823B6E, $0D4326D9, $130476DC, $17C56B6B, $1A864DB2, $1E475005,
     $2608EDB8, $22C9F00F, $2F8AD6D6, $2B4BCB61, $350C9B64, $31CD86D3, $3C8EA00A, $384FBDBD,
     $4C11DB70, $48D0C6C7, $4593E01E, $4152FDA9,	$5F15ADAC, $5BD4B01B, $569796C2, $52568B75,
@@ -101,7 +101,7 @@ end;
 procedure THashCKSum.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: DWORD;
+  tmp: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do
@@ -113,7 +113,7 @@ end;
 procedure THashCKSum.Finalize;
 var
   L: UInt64;
-  tmp: DWORD;
+  tmp: UInt32;
 begin
   L := FLength;
   tmp := FContext;
@@ -153,7 +153,7 @@ end;
 procedure THashCKSumMPEG2.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: DWORD;
+  tmp: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do

@@ -17,7 +17,7 @@ type
   /// </summary>
   THashFORK256 = class(TBlockHash)
   private
-    FState: array[0..7] of Cardinal;
+    FState: array[0..7] of UInt32;
     FLength: UInt64;
   protected
     procedure Initialize; override;
@@ -65,27 +65,27 @@ end;
 
 procedure THashFORK256.UpdateBlock(const Block: Pointer);
 type
-  TArray8UINT = array[0..7] of Cardinal;
+  TArray8UINT = array[0..7] of UInt32;
 
 const
-  Delta: array[0..15] of Cardinal = (
+  Delta: array[0..15] of UInt32 = (
     $428A2F98, $71374491, $B5C0FBCF, $E9B5DBA5, $3956C25B, $59F111F1, $923F82A4, $AB1C5ED5,
     $D807AA98, $12835B01, $243185BE, $550C7DC3, $72BE5D74, $80DEB1FE, $9BDC06A7, $C19BF174);
 
 
-  function Fx(const X: Cardinal): Cardinal; inline;
+  function Fx(const X: UInt32): UInt32; inline;
   begin
     Result :=  X + (RotateLeft(X, 7) xor RotateLeft(X, 22));
   end;
 
-  function Gx(const X: Cardinal): Cardinal; inline;
+  function Gx(const X: UInt32): UInt32; inline;
   begin
     Result :=  X xor (RotateLeft(X, 13) + RotateLeft(X, 27));
   end;
 
-  procedure Step(var Arr: TArray8UINT; const M1, M2, Delta1, Delta2: Cardinal); inline;
+  procedure Step(var Arr: TArray8UINT; const M1, M2, Delta1, Delta2: UInt32); inline;
   var
-    x1, x1d, x2, x2d, temp, g, f: Cardinal;
+    x1, x1d, x2, x2d, temp, g, f: UInt32;
   begin
     x1 := Arr[0] + M1; x1d := x1 + Delta1;
     x2 := Arr[4] + M2; x2d := x2 + Delta2;
@@ -105,9 +105,9 @@ const
   end;
 
 type
-  TArray16UINT = array[0..15] of Cardinal;
+  TArray16UINT = array[0..15] of UInt32;
 var
-  W: array[0..15] of Cardinal;
+  W: array[0..15] of UInt32;
   i: Integer;
   tmp1, tmp2, tmp3, tmp4: TArray8UINT;
 begin

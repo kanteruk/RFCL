@@ -14,11 +14,11 @@ type
 
   THashCRC32Abstract = class abstract(THash)
   private
-    FContext: DWORD;
+    FContext: UInt32;
   protected
     type
-      TTable = array[Byte] of DWORD;
-    class procedure TableGenerate(var ATAble: TTable; const APolynomial: DWORD);
+      TTable = array[Byte] of UInt32;
+    class procedure TableGenerate(var ATAble: TTable; const APolynomial: UInt32);
   public
     class function HashType: THashType; override;
     function HashSize: Cardinal; override;
@@ -73,9 +73,9 @@ begin
   Result := 4;
 end;
 
-class procedure THashCRC32Abstract.TableGenerate(var ATAble: TTable; const APolynomial: DWORD);
+class procedure THashCRC32Abstract.TableGenerate(var ATAble: TTable; const APolynomial: UInt32);
 var
-  c: DWORD;
+  c: UInt32;
   i, j: Byte;
 begin
   for i := 0 to 255 do

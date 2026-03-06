@@ -23,7 +23,7 @@ type
   private const
     FNV32_PRIME = $01000193;
   private
-    FContext: DWORD;
+    FContext: UInt32;
     FModificationType: TFNVModificationType;
   protected
     procedure Initialize; override;
@@ -94,7 +94,7 @@ end;
 procedure TFNV32.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: DWORD;
+  tmp: UInt32;
 begin
   tmp := FContext;
   case FModificationType of

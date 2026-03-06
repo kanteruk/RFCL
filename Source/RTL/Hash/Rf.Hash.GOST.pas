@@ -17,8 +17,8 @@ type
   /// </summary>
   THashGOST = class(TBlockHash)
   private
-    FState: array[0..7] of Cardinal;
-    FSum: array[0..7] of Cardinal;
+    FState: array[0..7] of UInt32;
+    FSum: array[0..7] of UInt32;
     FLength: UInt64;
   protected
     procedure Initialize; override;
@@ -35,7 +35,7 @@ type
 implementation
 
 const
-  SBox1: array[Byte] of Cardinal = (
+  SBox1: array[Byte] of UInt32 = (
     $72000, $75000, $74800, $71000, $76800, $74000, $70000, $77000,
     $73000, $75800, $70800, $76000, $73800, $77800, $72800, $71800,
     $5A000, $5D000, $5C800, $59000, $5E800, $5C000, $58000, $5F000,
@@ -69,7 +69,7 @@ const
     $4A000, $4D000, $4C800, $49000, $4E800, $4C000, $48000, $4F000,
     $4B000, $4D800, $48800, $4E000, $4B800, $4F800, $4A800, $49800);
 
-  SBox2: array[Byte] of Cardinal = (
+  SBox2: array[Byte] of UInt32 = (
     $3A80000, $3C00000, $3880000, $3E80000, $3D00000, $3980000, $3A00000, $3900000,
     $3F00000, $3F80000, $3E00000, $3B80000, $3B00000, $3800000, $3C80000, $3D80000,
     $6A80000, $6C00000, $6880000, $6E80000, $6D00000, $6980000, $6A00000, $6900000,
@@ -103,7 +103,7 @@ const
     $1A80000, $1C00000, $1880000, $1E80000, $1D00000, $1980000, $1A00000, $1900000,
     $1F00000, $1F80000, $1E00000, $1B80000, $1B00000, $1800000, $1C80000, $1D80000);
 
-  SBox3: array[Byte] of Cardinal = (
+  SBox3: array[Byte] of UInt32 = (
     $30000002, $60000002, $38000002, $08000002, $28000002, $78000002, $68000002, $40000002,
     $20000002, $50000002, $48000002, $70000002, $00000002, $18000002, $58000002, $10000002,
     $B0000005, $E0000005, $B8000005, $88000005, $A8000005, $F8000005, $E8000005, $C0000005,
@@ -137,7 +137,7 @@ const
     $30000007, $60000007, $38000007, $08000007, $28000007, $78000007, $68000007, $40000007,
     $20000007, $50000007, $48000007, $70000007, $00000007, $18000007, $58000007, $10000007);
 
-  SBox4: array[Byte] of Cardinal = (
+  SBox4: array[Byte] of UInt32 = (
     $0E8, $0D8, $0A0, $088, $098, $0F8, $0A8, $0C8, $080, $0D0, $0F0, $0B8, $0B0, $0C0, $090, $0E0,
     $7E8, $7D8, $7A0, $788, $798, $7F8, $7A8, $7C8, $780, $7D0, $7F0, $7B8, $7B0, $7C0, $790, $7E0,
     $6E8, $6D8, $6A0, $688, $698, $6F8, $6A8, $6C8, $680, $6D0, $6F0, $6B8, $6B0, $6C0, $690, $6E0,
@@ -181,12 +181,12 @@ begin
 end;
 
 type
-  PArray8Cardinal = ^TArray8Cardinal;
-  TArray8Cardinal = array[0..7] of Cardinal;
+  PArray8UInt32 = ^TArray8UInt32;
+  TArray8UInt32 = array[0..7] of UInt32;
 
-procedure GOSTEncryptRound(var l, r: Cardinal; const k1, k2: Cardinal); inline;
+procedure GOSTEncryptRound(var l, r: UInt32; const k1, k2: UInt32); inline;
 var
-  t: Cardinal;
+  t: UInt32;
 begin
   t := k1 + r;
   l := l xor (SBox1[t and $FF] xor SBox2[(t shr 8) and $FF] xor
@@ -198,9 +198,9 @@ end;
 
 procedure THashGOST.Compress(const Block: Pointer);
 var
-  A, B, C, D, E, F, G, H: Cardinal;
-  i, L, R: Cardinal;
-  Key, v, w, s: TArray8Cardinal;
+  A, B, C, D, E, F, G, H: UInt32;
+  i, L, R: UInt32;
+  Key, v, w, s: TArray8UInt32;
 begin
   A := FState[0];
   B := FState[1];
@@ -308,19 +308,19 @@ begin
 
   {12 rounds of the LFSR (computed from a product matrix) and xor in M}
 
-  A := PArray8Cardinal(Block)^[0] xor s[6];
-  B := PArray8Cardinal(Block)^[1] xor s[7];
-  C := PArray8Cardinal(Block)^[2] xor (s[0] shl 16) xor (s[0] shr 16) xor (s[0] and $ffff) xor (s[1] and $ffff) xor (s[1] shr 16) xor (s[2] shl 16) xor s[6] xor (s[6] shl 16) xor (s[7] and $ffff0000) xor (s[7] shr 16);
-  D := PArray8Cardinal(Block)^[3] xor (s[0] and $ffff) xor (s[0] shl 16) xor (s[1] and $ffff) xor (s[1]                                                                      shl 16)
+  A := PArray8UInt32(Block)^[0] xor s[6];
+  B := PArray8UInt32(Block)^[1] xor s[7];
+  C := PArray8UInt32(Block)^[2] xor (s[0] shl 16) xor (s[0] shr 16) xor (s[0] and $ffff) xor (s[1] and $ffff) xor (s[1] shr 16) xor (s[2] shl 16) xor s[6] xor (s[6] shl 16) xor (s[7] and $ffff0000) xor (s[7] shr 16);
+  D := PArray8UInt32(Block)^[3] xor (s[0] and $ffff) xor (s[0] shl 16) xor (s[1] and $ffff) xor (s[1]                                                                      shl 16)
               xor (s[1] shr 16) xor (s[2] shl 16) xor (s[2] shr 16) xor (s[3] shl 16) xor s[6] xor (s[6] shl 16) xor (s[6] shr 16) xor (s[7] and $ffff) xor (s[7] shl 16) xor (s[7] shr 16);
-  E := PArray8Cardinal(Block)^[4] xor (s[0] and $ffff0000) xor (s[0] shl 16) xor (s[0] shr 16) xor
+  E := PArray8UInt32(Block)^[4] xor (s[0] and $ffff0000) xor (s[0] shl 16) xor (s[0] shr 16) xor
     (s[1] and $ffff0000) xor (s[1] shr 16) xor (s[2] shl 16) xor (s[2] shr 16) xor (s[3] shl 16) xor (s[3] shr 16) xor (s[4] shl 16) xor (s[6] shl 16) xor (s[6] shr 16) xor (s[7] and $ffff) xor (s[7] shl 16) xor (s[7] shr 16);
-  F := PArray8Cardinal(Block)^[5] xor (s[0] shl 16) xor (s[0] shr 16) xor (s[0] and $ffff0000) xor
+  F := PArray8UInt32(Block)^[5] xor (s[0] shl 16) xor (s[0] shr 16) xor (s[0] and $ffff0000) xor
     (s[1] and $ffff) xor s[2] xor (s[2] shr 16) xor (s[3] shl 16) xor (s[3] shr
                                                                     16) xor (s[4] shl 16) xor (s[4] shr 16) xor (s[5] shl 16) xor (s[6] shl 16) xor (s[6] shr 16) xor (s[7] and $ffff0000) xor (s[7] shl 16) xor (s[7] shr 16);
-  G := PArray8Cardinal(Block)^[6] xor s[0] xor (s[1] shr 16) xor (s[2] shl 16) xor s[3] xor (s[3] shr 16)
+  G := PArray8UInt32(Block)^[6] xor s[0] xor (s[1] shr 16) xor (s[2] shl 16) xor s[3] xor (s[3] shr 16)
               xor (s[4] shl 16) xor (s[4] shr 16) xor (s[5] shl 16) xor (s[5] shr 16) xor s[6] xor (s[6] shl 16) xor (s[6] shr 16) xor (s[7] shl 16);
-  H := PArray8Cardinal(Block)^[7] xor (s[0] and $ffff0000) xor (s[0] shl 16) xor (s[1] and $ffff) xor
+  H := PArray8UInt32(Block)^[7] xor (s[0] and $ffff0000) xor (s[0] shl 16) xor (s[1] and $ffff) xor
     (s[1] shl 16) xor (s[2] shr 16) xor (s[3] shl 16) xor s[4] xor (s[4] shr 16) xor (s[5] shl 16) xor (s[5] shr 16) xor (s[6] shr 16) xor (s[7] and $ffff) xor (s[7] shl 16) xor (s[7] shr 16);
 
   {16 * 1 round of the LFSR and xor in H}
@@ -377,14 +377,14 @@ begin
   c := False;
   for i := 0 to 7 do
   begin
-    Inc(FSum[i], PArray8Cardinal(Block)^[i]);
+    Inc(FSum[i], PArray8UInt32(Block)^[i]);
     if c then
     begin
       Inc(FSum[i], 1);
-      c := (FSum[i] <= PArray8Cardinal(Block)^[i]);
+      c := (FSum[i] <= PArray8UInt32(Block)^[i]);
     end
     else
-      c := (FSum[i] < PArray8Cardinal(Block)^[i]);
+      c := (FSum[i] < PArray8UInt32(Block)^[i]);
   end;
   
   Compress(Block);
@@ -409,7 +409,7 @@ end;
 procedure THashGOST.Finalize;
 var
   SaveLength: UInt64;
-  LengthInBits: TArray8Cardinal;
+  LengthInBits: TArray8UInt32;
 begin
   Inc(FLength, FUsedBuffer);
   SaveLength := FLength shl 3;

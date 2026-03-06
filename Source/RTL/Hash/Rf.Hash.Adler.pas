@@ -8,7 +8,7 @@ unit Rf.Hash.Adler;
 
 interface
 
-uses System.Types, System.SysUtils, Rf.Hash;
+uses System.SysUtils, Rf.Hash;
 
 type
 
@@ -16,7 +16,7 @@ type
 
   THashAdler8 = class(THash)
   private
-    FContext: DWORD;
+    FContext: UInt32;
   const
     Adler8Base = $0D;
   protected
@@ -32,7 +32,7 @@ type
 
   THashAdler16 = class(THash)
   private
-    FContext: DWORD;
+    FContext: UInt32;
   const
     Adler16Base = $FB;
   protected
@@ -48,7 +48,7 @@ type
 
   THashAdler32 = class(THash)
   private
-    FContext: DWORD;
+    FContext: UInt32;
   const
     Adler32Base = $FFF1;
   protected
@@ -134,12 +134,12 @@ begin
       while v >= Adler16Base do Dec(v, Adler16Base);
       Hi := v;
     end;
-  FContext := DWORD(tmp);
+  FContext := UInt32(tmp);
 end;
 
 procedure THashAdler16.Finalize;
 var
-  FState: Word;
+  FState: UInt16;
 begin
   FState := ((FContext shr 8) and $FF00) or (FContext and $FF);
   with WordRec(FState) do
@@ -172,12 +172,12 @@ const
   NMax = 5552;
 var
 //  i: Integer;
-//  v: DWORD;
+//  v: UInt32;
   //Lo, Hi: Word;
   LPtrBuf: PByte;
   Remaining: Cardinal;
   n: Cardinal;
-  Lo, Hi: Cardinal;
+  Lo, Hi: UInt32;
 begin
   Lo := LongRec(FContext).Lo;
   Hi := LongRec(FContext).Hi;

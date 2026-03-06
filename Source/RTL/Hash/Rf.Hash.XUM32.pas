@@ -16,12 +16,12 @@ type
 
   THashXUM32 = class(THash)
   private
-    FLength: DWORD;
-    FCRC32: DWORD;
-    FELF32: DWORD;
-    FState: DWORD;
+    FLength: UInt32;
+    FCRC32: UInt32;
+    FELF32: UInt32;
+    FState: UInt32;
   private class var
-    FTable: array[Byte] of DWORD;
+    FTable: array[Byte] of UInt32;
     FTableInitialized: Boolean;
     class procedure CRC32TableInit;
   protected
@@ -58,7 +58,7 @@ end;
 procedure THashXUM32.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  CRC32, ELF32, tst: DWORD;
+  CRC32, ELF32, tst: UInt32;
   pb: PByte;
 begin
   CRC32 := FCRC32;
@@ -99,7 +99,7 @@ end;
 
 class procedure THashXUM32.CRC32TableInit;
 var
-  c: DWORD;
+  c: UInt32;
   i, j: Byte;
 begin
   if not FTableInitialized then

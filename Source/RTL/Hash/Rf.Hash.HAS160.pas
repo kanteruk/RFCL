@@ -17,7 +17,7 @@ type
   /// </summary>
   THashHAS160 = class(TBlockHash)
   private
-    FState: array[0..4] of Cardinal;
+    FState: array[0..4] of UInt32;
     FLength: UInt64;
   protected
     procedure Initialize; override;
@@ -72,10 +72,10 @@ const
     18, 12,  5, 14,  7, 19,  0,  9, 2, 11, 16,  4, 13,  6, 15, 17,  8,  1, 10,  3,
     18,  7,  2, 13,  8, 19,  3, 14, 9,  4, 16, 15, 10,  5,  0, 17, 11,  6,  1, 12);
 type
-  TArray16UINT = array[0..15] of Cardinal;
+  TArray16UINT = array[0..15] of UInt32;
 var
-  A, B, C, D, E, T: Cardinal;
-  W: array[0..19] of Cardinal;
+  A, B, C, D, E, T: UInt32;
+  W: array[0..19] of UInt32;
   i: Integer;
 begin
   Inc(FLength, 64);

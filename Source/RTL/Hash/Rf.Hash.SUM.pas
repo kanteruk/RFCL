@@ -43,7 +43,7 @@ type
 
   THashSUM24 = class(THash)
   private
-    FContext: LongWord;
+    FContext: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -57,7 +57,7 @@ type
 
   THashSUM32 = class(THash)
   private
-    FContext: LongWord;
+    FContext: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -172,7 +172,7 @@ end;
 procedure THashSUM24.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: LongWord;
+  tmp: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do
@@ -208,7 +208,7 @@ end;
 procedure THashSUM32.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: LongWord;
+  tmp: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do

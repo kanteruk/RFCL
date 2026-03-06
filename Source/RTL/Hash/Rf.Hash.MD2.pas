@@ -17,7 +17,7 @@ type
   /// </summary>
   THashMD2 = class(TBlockHash)
   private
-    FState: array[0..3] of Cardinal;
+    FState: array[0..3] of UInt32;
     FChecksum: array[0..15] of Byte;
   protected
     procedure Initialize; override;

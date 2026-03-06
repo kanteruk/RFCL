@@ -33,7 +33,7 @@ type
 
   THashSnefru2Hash128 = class(THashSnefru2HashAbstract)
   private
-    FState: array[0..3] of Cardinal;
+    FState: array[0..3] of UInt32;
   protected
     procedure Initialize; override;
     procedure UpdateBlock(const Block: Pointer); override;
@@ -48,7 +48,7 @@ type
 
   THashSnefru2Hash256 = class(THashSnefru2HashAbstract)
   private
-    FState: array[0..7] of Cardinal;
+    FState: array[0..7] of UInt32;
   protected
     procedure Initialize; override;
     procedure UpdateBlock(const Block: Pointer); override;
@@ -62,7 +62,7 @@ type
 implementation
 
 const
-  SBoxes: array[0..15, Byte] of Cardinal = (
+  SBoxes: array[0..15, Byte] of UInt32 = (
    ($64F9001B, $FEDDCDF6, $7C8FF1E2, $11D71514, $8B8C18D3, $DDDF881E, $6EAB5056, $88CED8E1,
     $49148959, $69C56FD5, $B7994F03, $0FBCEE3E, $3C264940, $21557E58, $E14B3FC2, $2E5CF591,
     $DCEFF8CE, $092A1648, $BE812936, $FF7B0C6A, $D5251037, $AFA448F1, $7DAFC95A, $1EA69C3F,
@@ -915,9 +915,9 @@ end;
 procedure THashSnefru2Hash128.UpdateBlock(const Block: Pointer);
 type
   PArray12UINT = ^TArray12UINT;
-  TArray12UINT = array[0..11] of Cardinal;
+  TArray12UINT = array[0..11] of UInt32;
 var
-  W: array[0..15] of Cardinal;
+  W: array[0..15] of UInt32;
   Pass: Byte;
   i,j,k: Byte;
 begin
@@ -1036,9 +1036,9 @@ end;
 procedure THashSnefru2Hash256.UpdateBlock(const Block: Pointer);
 type
   PArray8UINT = ^TArray8UINT;
-  TArray8UINT = array[0..7] of Cardinal;
+  TArray8UINT = array[0..7] of UInt32;
 var
-  W: array[0..15] of Cardinal;
+  W: array[0..15] of UInt32;
   Pass: Byte;
   i,j,k: Byte;
 begin

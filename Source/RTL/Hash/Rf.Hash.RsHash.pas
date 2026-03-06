@@ -17,8 +17,8 @@ type
   /// </summary>
   TRSHash = class(THash)
   private
-    FState: DWORD;
-    Fva: DWORD;
+    FState: UInt32;
+    Fva: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -51,7 +51,7 @@ end;
 procedure TRSHash.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp, tmpa: DWORD;
+  tmp, tmpa: UInt32;
 begin
   tmp := FState;
   tmpa := Fva;

@@ -17,7 +17,7 @@ type
   /// </summary>
   THashSumSysV = class(THash)
   private
-    FContext: DWORD;
+    FContext: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -49,7 +49,8 @@ end;
 procedure THashSumSysV.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: DWORD;
+  tmp: UInt32;
+//  P: PByte absolute Buffer;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do
@@ -59,7 +60,7 @@ end;
 
 procedure THashSumSysV.Finalize;
 var
-  r: DWORD;
+  r: UInt32;
 begin
   r := (FContext and $FFFF) + (((FContext and $FFFFFFFF) shr 16) and $FFFF);
   FContext := (r and $FFFF) + (r shr 16);

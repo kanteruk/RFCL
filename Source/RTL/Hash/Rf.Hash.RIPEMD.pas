@@ -31,7 +31,7 @@ type
 
   THashRIPEMD128 = class(THashRIPEMDAbstract)
   private
-    FState: array[0..3] of LongWord;
+    FState: array[0..3] of UInt32;
   protected
     procedure Initialize; override;
     procedure UpdateBlock(const BlockBuf: Pointer); override;
@@ -44,7 +44,7 @@ type
 
   THashRIPEMD160 = class(THashRIPEMDAbstract)
   private
-    FState: array[0..4] of LongWord;
+    FState: array[0..4] of UInt32;
   protected
     procedure Initialize; override;
     procedure UpdateBlock(const BlockBuf: Pointer); override;
@@ -57,7 +57,7 @@ type
 
   THashRIPEMD256 = class(THashRIPEMDAbstract)
   private
-    FState: array[0..7] of LongWord;
+    FState: array[0..7] of UInt32;
   protected
     procedure Initialize; override;
     procedure UpdateBlock(const BlockBuf: Pointer); override;
@@ -70,7 +70,7 @@ type
 
   THashRIPEMD320 = class(THashRIPEMDAbstract)
   private
-    FState: array[0..9] of LongWord;
+    FState: array[0..9] of UInt32;
   protected
     procedure Initialize; override;
     procedure UpdateBlock(const BlockBuf: Pointer); override;
@@ -160,10 +160,10 @@ end;
 procedure THashRIPEMD128.UpdateBlock(const BlockBuf: Pointer);
 type
   PArray16UINT = ^TArray16UINT;
-  TArray16UINT = array[0..15] of LongWord;
+  TArray16UINT = array[0..15] of UInt32;
 var
   Block: PArray16UINT;
-  A, B, C, D, Ap, Bp, Cp, Dp, T: LongWord;
+  A, B, C, D, Ap, Bp, Cp, Dp, T: UInt32;
   i: Byte;
 begin
   Inc(FLength, 64);
@@ -270,10 +270,10 @@ end;
 procedure THashRIPEMD160.UpdateBlock(const BlockBuf: Pointer);
 type
   PArray16UINT = ^TArray16UINT;
-  TArray16UINT = array[0..15] of LongWord;
+  TArray16UINT = array[0..15] of UInt32;
 var
   Block: PArray16UINT;
-  A, B, C, D, E, Ap, Bp, Cp, Dp, Ep, T: LongWord;
+  A, B, C, D, E, Ap, Bp, Cp, Dp, Ep, T: UInt32;
   i: Byte;
 begin
   Inc(FLength, 64);
@@ -410,10 +410,10 @@ end;
 procedure THashRIPEMD256.UpdateBlock(const BlockBuf: Pointer);
 type
   PArray16UINT = ^TArray16UINT;
-  TArray16UINT = array[0..15] of LongWord;
+  TArray16UINT = array[0..15] of UInt32;
 var
   Block: PArray16UINT;
-  A, B, C, D, E, F, G, H, T: LongWord;
+  A, B, C, D, E, F, G, H, T: UInt32;
   i: Byte;
 begin
   Inc(FLength, 64);
@@ -539,10 +539,10 @@ end;
 procedure THashRIPEMD320.UpdateBlock(const BlockBuf: Pointer);
 type
   PArray16UINT = ^TArray16UINT;
-  TArray16UINT = array[0..15] of LongWord;
+  TArray16UINT = array[0..15] of UInt32;
 var
   Block: PArray16UINT;
-  A, B, C, D, E, F, G, H, I, J, T: LongWord;
+  A, B, C, D, E, F, G, H, I, J, T: UInt32;
   Index: Byte;
 begin
   Inc(FLength, 64);

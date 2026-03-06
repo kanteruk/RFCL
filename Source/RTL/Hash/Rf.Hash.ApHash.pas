@@ -17,7 +17,7 @@ type
   /// </summary>
   TApHash = class(THash)
   private
-    FState: DWORD;
+    FState: UInt32;
     FParity: Boolean;
   protected
     procedure Initialize; override;
@@ -51,7 +51,7 @@ end;
 procedure TApHash.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  s: DWORD;
+  s: UInt32;
   p: Boolean;
   v: PByte;
 begin

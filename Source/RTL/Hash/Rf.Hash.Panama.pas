@@ -17,9 +17,9 @@ type
   /// </summary>
   THashPanama = class(TBlockHash)
   private
-    FState: array[0..16] of Cardinal;
-    FStages: array[0..31, 0..7] of Cardinal;
-    FTap: Cardinal;
+    FState: array[0..16] of UInt32;
+    FStages: array[0..31, 0..7] of UInt32;
+    FTap: UInt32;
   protected
     procedure Initialize; override;
     procedure UpdateBlock(const Block: Pointer); override;
@@ -67,16 +67,16 @@ end;
 procedure THashPanama.UpdateBlock(const Block: Pointer);
 type
   PArray16UINT = ^TArray16UINT;
-  TArray16UINT = array[0..15] of Cardinal;
+  TArray16UINT = array[0..15] of UInt32;
 const
   cMod32 = $1F;
 var
-  X0, X1, X2, X3, X4, X5, X6, X7: Cardinal;
-  Gamma: array[0..16] of Cardinal;
-  pi: array[0..16] of Cardinal;
-  Theta: array[0..16] of Cardinal;
-  S: array[0..16] of Cardinal;
-  tap16, tap25: Cardinal;
+  X0, X1, X2, X3, X4, X5, X6, X7: UInt32;
+  Gamma: array[0..16] of UInt32;
+  pi: array[0..16] of UInt32;
+  Theta: array[0..16] of UInt32;
+  S: array[0..16] of UInt32;
+  tap16, tap25: UInt32;
   i: Integer;
 begin
   X0 := PArray16UINT(Block)^[0];
@@ -208,12 +208,12 @@ procedure THashPanama.GetValue(var Value: TBytes);
 const
   cMod32 = $1F;
 var
-  Gamma: array[0..16] of Cardinal;
-  pi: array[0..16] of Cardinal;
-  Theta: array[0..16] of Cardinal;
-  S: array[0..16] of Cardinal;
-  hash: array[0..7] of Cardinal;
-  tap4, tap16, tap25: Cardinal;
+  Gamma: array[0..16] of UInt32;
+  pi: array[0..16] of UInt32;
+  Theta: array[0..16] of UInt32;
+  S: array[0..16] of UInt32;
+  hash: array[0..7] of UInt32;
+  tap4, tap16, tap25: UInt32;
   i, j: Integer;
 begin
   for i := 0 to 16 do

@@ -17,9 +17,9 @@ type
   /// </summary>
   THashMABKDR = class(THash)
   private
-    FContext: DWORD;
-//    FSeed: DWORD;
-    FStartIndex: DWORD;
+    FContext: UInt32;
+//    FSeed: UInt32;
+    FStartIndex: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -56,13 +56,13 @@ const
   
 procedure THashMABKDR.Update(const Buffer: Pointer; const Size: Cardinal);
 var
-  i: Integer;
-  tmp, st: DWORD;
+  i: Cardinal;
+  tmp, st: UInt32;
 begin
   st := FStartIndex;
   tmp := FContext;
   for i := 0 to Size - 1 do
-    tmp := (tmp * MABKDR_Seed) + PByteArray(Buffer)^[i] + { maBKDR modification here: } st + DWORD(i);
+    tmp := (tmp * MABKDR_Seed) + PByteArray(Buffer)^[i] + { maBKDR modification here: } st + UInt32(i);
   FContext := tmp;
   Inc(FStartIndex, Size);
 end;

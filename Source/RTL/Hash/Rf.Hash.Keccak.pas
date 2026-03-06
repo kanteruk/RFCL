@@ -17,10 +17,10 @@ type
   /// </summary>
   THashKeccak = class(TBlockHash)
   private
-    FHashSize: Cardinal;
+    FHashSize: UInt32;
     FBlockSize: Integer;
     FState: array [0..24] of UInt64;
-    FBlockSize64: Cardinal;
+    FBlockSize64: UInt32;
   protected
     procedure Initialize; override;
     procedure UpdateBlock(const Block: Pointer); override;

@@ -26,7 +26,7 @@ type
 
   THashSHA256 = class(THashSHA2)
   private
-    FState: array[0..7] of DWORD;
+    FState: array[0..7] of UInt32;
   protected
     procedure Initialize; override;
     procedure UpdateBlock(const Block: Pointer); override;
@@ -127,7 +127,7 @@ end;
 {$POINTERMATH ON}
 procedure THashSHA256.UpdateBlock(const Block: Pointer);
 const
-  K256: array[0..63] of DWORD = (
+  K256: array[0..63] of UInt32 = (
    $428A2F98, $71374491, $B5C0FBCF, $E9B5DBA5, $3956C25B, $59F111F1, $923F82A4, $AB1C5ED5,
    $D807AA98, $12835B01, $243185BE, $550C7DC3, $72BE5D74, $80DEB1FE, $9BDC06A7, $C19BF174,
    $E49B69C1, $EFBE4786, $0FC19DC6, $240CA1CC, $2DE92C6F, $4A7484AA, $5CB0A9DC, $76F988DA,
@@ -137,26 +137,26 @@ const
    $19A4C116, $1E376C08, $2748774C, $34B0BCB5, $391C0CB3, $4ED8AA4A, $5B9CCA4F, $682E6FF3,
    $748F82EE, $78A5636F, $84C87814, $8CC70208, $90BEFFFA, $A4506CEB, $BEF9A3F7, $C67178F2);
 
-  function Ch_(X, Y, Z: Cardinal): Cardinal; inline;
+  function Ch_(X, Y, Z: UInt32): UInt32; inline;
   begin
     Result := (X and Y) xor ((not X) and Z);
   end;
-  function Maj(X, Y, Z: Cardinal): Cardinal; inline;
+  function Maj(X, Y, Z: UInt32): UInt32; inline;
   begin
     Result := (X and Y) xor (X and Z) xor (Y and Z);
   end;
-  function ROR(x: Cardinal; n: Byte): Cardinal; inline;
+  function ROR(x: UInt32; n: Byte): UInt32; inline;
   begin
     Result := (x shl (32 - n) or (x shr n));
   end;
 
 
 type
-  TArray16UINT = array[0..15] of DWORD;
+  TArray16UINT = array[0..15] of UInt32;
 var
-  A, B, C, D, E, F, G, H: DWORD;
-  W: array[0..63] of DWORD;
-  t1, t2, s0, s1: DWORD;
+  A, B, C, D, E, F, G, H: UInt32;
+  W: array[0..63] of UInt32;
+  t1, t2, s0, s1: UInt32;
   i: Integer;
 begin
   Inc(FLength, FBlockSize);

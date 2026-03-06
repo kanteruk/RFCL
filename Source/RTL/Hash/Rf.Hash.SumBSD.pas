@@ -17,7 +17,7 @@ type
   /// </summary>
   THashSumBSD = class(THash)
   private
-    FContext: LongWord;
+    FContext: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -49,7 +49,7 @@ end;
 procedure THashSumBSD.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: LongWord;
+  tmp: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do

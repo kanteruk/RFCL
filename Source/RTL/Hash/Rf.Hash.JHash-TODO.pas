@@ -17,7 +17,7 @@ type
   /// </summary>
   TJHash = class(THash)
   private
-    FContext: LongWord;
+    FContext: UInt32;
   protected
     procedure Init; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -25,7 +25,7 @@ type
   public
     class function HashType: THashType; override;
     function HashSize: Integer; override;
-    property Value: LongWord read FContext;
+    property Value: UInt32 read FContext;
     function ValueAsBytes: TBytes; override;
   end;
 
@@ -51,7 +51,7 @@ end;
 procedure TJHash.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: LongWord;
+  tmp: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do

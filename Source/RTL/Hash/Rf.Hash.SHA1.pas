@@ -17,7 +17,7 @@ type
   /// </summary>
   THashSHA1 = class(TBlockHash)
   private
-    FState: array[0..4] of Cardinal;
+    FState: array[0..4] of UInt32;
     FLength: UInt64;
   protected
     procedure Initialize; override;
@@ -62,10 +62,10 @@ end;
 
 procedure THashSHA1.UpdateBlock(const Block: Pointer);
 type
-  TArray16UINT = array[0..15] of Cardinal;
+  TArray16UINT = array[0..15] of UInt32;
 var
-  A, B, C, D, E, T: Cardinal;
-  W: array[0..79] of Cardinal;
+  A, B, C, D, E, T: UInt32;
+  W: array[0..79] of UInt32;
   i: Integer;
 begin
   Inc(FLength, 64);

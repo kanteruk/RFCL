@@ -17,7 +17,7 @@ type
   /// </summary>
   THashMD5 = class(TBlockHash)
   private
-    FState: array[0..3] of Cardinal;
+    FState: array[0..3] of UInt32;
     FLength: UInt64;
   protected
     procedure Initialize; override;
@@ -61,7 +61,7 @@ end;
 
 procedure THashMD5.UpdateBlock(const Block: Pointer);
 type
-  TArray16UINT = array[0..15] of Cardinal;
+  TArray16UINT = array[0..15] of UInt32;
 const
   S11 = 07;
   S12 = 12;
@@ -80,28 +80,28 @@ const
   S43 = 15;
   S44 = 21;
 
-  procedure StageF(var a: Cardinal; const b, c, d, x, ac: Cardinal; const s: Byte); inline;
+  procedure StageF(var a: UInt32; const b, c, d, x, ac: UInt32; const s: Byte); inline;
   begin
     a := b + RotateLeft(a + ((b and c) or ((not b) and d)) + x + ac, s);
   end;
 
-  procedure StageG(var a: Cardinal; const b, c, d, x, ac: Cardinal; const s: Byte); inline;
+  procedure StageG(var a: UInt32; const b, c, d, x, ac: UInt32; const s: Byte); inline;
   begin
     a := b + RotateLeft(a + ((b and d) or ((not d) and c)) + x + ac, s);
   end;
 
-  procedure StageH(var a: Cardinal; const b, c, d, x, ac: Cardinal; const s: Byte); inline;
+  procedure StageH(var a: UInt32; const b, c, d, x, ac: UInt32; const s: Byte); inline;
   begin
     a := b + RotateLeft(a + (b xor c xor d) + x + ac, s);
   end;
 
-  procedure StageI(var a: Cardinal; const b, c, d, x, ac: Cardinal; const s: Byte); inline;
+  procedure StageI(var a: UInt32; const b, c, d, x, ac: UInt32; const s: Byte); inline;
   begin
     a := b + RotateLeft(a + (c xor ((not d) or b)) + x + ac, s);
   end;
 
 var
-  A, B, C, D: Cardinal;
+  A, B, C, D: UInt32;
 begin
   Inc(FLength, 64);
 

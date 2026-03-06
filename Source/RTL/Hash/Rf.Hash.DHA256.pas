@@ -17,7 +17,7 @@ type
   /// </summary>
   THashDHA256 = class(TBlockHash)
   private
-    FState: array[0..7] of Cardinal;
+    FState: array[0..7] of UInt32;
     FLength: UInt64;
   protected
     procedure Initialize; override;
@@ -33,7 +33,7 @@ type
 implementation
 
 const
-  cK: array[0..63] of Cardinal = (
+  cK: array[0..63] of UInt32 = (
     $428A2F98, $71374491, $B5C0FBCF, $E9B5DBA5, $3956C25B,
     $59F111F1, $923F82A4, $AB1C5ED5, $D807AA98, $12835B01,
     $243185BE, $550C7DC3, $72BE5D74, $80DEB1FE, $9BDC06A7,
@@ -82,11 +82,11 @@ end;
 procedure THashDHA256.UpdateBlock(const Block: Pointer);
 type
   PArray16UINT = ^TArray16UINT;
-  TArray16UINT = array[0..15] of Cardinal;
+  TArray16UINT = array[0..15] of UInt32;
 var
-  A, B, C, D, E, F, G, H: Cardinal;
-  W: array[0..63] of Cardinal;
-  t1, t2, i: Cardinal;
+  A, B, C, D, E, F, G, H: UInt32;
+  W: array[0..63] of UInt32;
+  t1, t2, i: UInt32;
   PW: PArray16UINT;
 begin
   Inc(FLength, 64);

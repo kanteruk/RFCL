@@ -17,7 +17,7 @@ type
     0: (A, B, C: UInt64);
     1: (Bytes: array[0..23] of Byte);
     2: (Words: array[0..11] of Word);
-    3: (LongWords: array[0..5] of LongWord);
+    3: (DWords: array[0..5] of UInt32);
   end;
 
   /// <summary>

@@ -17,7 +17,7 @@ type
   /// </summary>
   TGHash = class abstract(THash)
   private
-    FContext: DWORD;
+    FContext: UInt32;
     //FVer: Byte;
   protected
     procedure Initialize; override;
@@ -77,7 +77,7 @@ end;
 procedure TGHash3.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: DWORD;
+  tmp: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do
@@ -90,7 +90,7 @@ end;
 procedure TGHash5.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp: DWORD;
+  tmp: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do

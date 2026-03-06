@@ -8,7 +8,7 @@ unit Rf.Hash.PJW32;
 
 interface
 
-uses System.Types, System.SysUtils, Rf.Hash;
+uses System.SysUtils, Rf.Hash;
 
 type
 
@@ -17,7 +17,7 @@ type
   /// </summary>
   THashPJW32 = class(THash)
   private
-    FContext: DWORD;
+    FContext: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
@@ -49,7 +49,7 @@ end;
 procedure THashPJW32.Update(const Buffer: Pointer; const Size: Cardinal);
 var
   i: Integer;
-  tmp, tst: DWORD;
+  tmp, tst: UInt32;
 begin
   tmp := FContext;
   for i := 0 to Size - 1 do

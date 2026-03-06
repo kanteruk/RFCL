@@ -22,7 +22,7 @@ type
     HAVAL_VERSION = 1;
     HashSizeBytes: array[THashHAVALSize] of Byte = (16, 20, 24, 28, 32);
   private
-    FState: array[0..7] of Cardinal;
+    FState: array[0..7] of UInt32;
     FHashSize: THashHAVALSize;
     FPassCount: THashHAVALPassCount;
     FLength: UInt64;
@@ -85,7 +85,7 @@ end;
 
 procedure THashHAVAL.Tailor;
 var
-  T: Cardinal;
+  T: UInt32;
 begin
   case FHashSize of
     hhs128bit:
@@ -174,37 +174,37 @@ end;
 
 procedure THashHAVAL.UpdateBlock(const BlockBuf: Pointer);
 
-  function F_1(const X6, X5, X4, X3, X2, X1, X0: Cardinal): Cardinal; inline;
+  function F_1(const X6, X5, X4, X3, X2, X1, X0: UInt32): UInt32; inline;
   begin
     Result := (X1 and (X0 xor X4)) xor (X2 and X5) xor (X3 and X6) xor X0;
   end;
 
-  function F_2(const X6, X5, X4, X3, X2, X1, X0: Cardinal): Cardinal; inline;
+  function F_2(const X6, X5, X4, X3, X2, X1, X0: UInt32): UInt32; inline;
   begin
     Result := (X2 and (X1 and (not X3) xor X4 and X5 xor X6 xor X0) xor
       X4 and (X1 xor X5) xor X3 and X5 xor X0);
   end;
 
-  function F_3(const X6, X5, X4, X3, X2, X1, X0: Cardinal): Cardinal; inline;
+  function F_3(const X6, X5, X4, X3, X2, X1, X0: UInt32): UInt32; inline;
   begin
     Result := (X3 and (X1 and X2 xor X6 xor X0) xor X1 and X4 xor X2 and X5 xor X0);
   end;
 
-  function F_4(const X6, X5, X4, X3, X2, X1, X0: Cardinal): Cardinal; inline;
+  function F_4(const X6, X5, X4, X3, X2, X1, X0: UInt32): UInt32; inline;
   begin
     Result := (X4 and (X5 and (not X2) xor X3 and (not X6) xor X1 xor X6 xor X0) xor
       X3 and (X1 and X2 xor X5 xor X6) xor X2 and X6 xor X0);
   end;
 
-  function F_5(const X6, X5, X4, X3, X2, X1, X0: Cardinal): Cardinal; inline;
+  function F_5(const X6, X5, X4, X3, X2, X1, X0: UInt32): UInt32; inline;
   begin
     Result := (X0 and (X1 and X2 and X3 xor (not X5)) xor X1 and X4 xor X2 and X5 xor X3 and X6);
   end;
 
 
-  procedure FF_1(var X7: Cardinal; const X6, X5, X4, X3, X2, X1, X0, w, PASS: Cardinal); inline;
+  procedure FF_1(var X7: UInt32; const X6, X5, X4, X3, X2, X1, X0, w, PASS: UInt32); inline;
   var
-    t: Cardinal;
+    t: UInt32;
   begin
     if PASS = 3 then
       t := F_1(X1, X0, X3, X5, X6, X2, X4)
@@ -215,9 +215,9 @@ procedure THashHAVAL.UpdateBlock(const BlockBuf: Pointer);
     X7 := RotateRight(t, 7) + RotateRight(X7, 11) + w;
   end;
 
-  procedure FF_2(var X7: Cardinal; const X6, X5, X4, X3, X2, X1, X0, w, c, PASS: Cardinal); inline;
+  procedure FF_2(var X7: UInt32; const X6, X5, X4, X3, X2, X1, X0, w, c, PASS: UInt32); inline;
   var
-    t: Cardinal;
+    t: UInt32;
   begin
     if PASS = 3 then
       t := F_2(X4, X2, X1, X0, X5, X3, X6)
@@ -228,9 +228,9 @@ procedure THashHAVAL.UpdateBlock(const BlockBuf: Pointer);
     X7 := RotateRight(t, 7) + RotateRight(X7, 11) + w + c;
   end;
 
-  procedure FF_3(var X7: Cardinal; const X6, X5, X4, X3, X2, X1, X0, w, c, PASS: Cardinal); inline;
+  procedure FF_3(var X7: UInt32; const X6, X5, X4, X3, X2, X1, X0, w, c, PASS: UInt32); inline;
   var
-    t: Cardinal;
+    t: UInt32;
   begin
     if PASS = 3 then
       t := F_3(X6, X1, X2, X3, X4, X5, X0)
@@ -241,9 +241,9 @@ procedure THashHAVAL.UpdateBlock(const BlockBuf: Pointer);
     X7 := RotateRight(t, 7) + RotateRight(X7, 11) + w + c;
   end;
 
-  procedure FF_4(var X7: Cardinal; const X6, X5, X4, X3, X2, X1, X0, w, c, PASS: Cardinal); inline;
+  procedure FF_4(var X7: UInt32; const X6, X5, X4, X3, X2, X1, X0, w, c, PASS: UInt32); inline;
   var
-    t: Cardinal;
+    t: UInt32;
   begin
     if PASS = 4 then
       t := F_4(X6, X4, X0, X5, X2, X1, X3)
@@ -252,20 +252,20 @@ procedure THashHAVAL.UpdateBlock(const BlockBuf: Pointer);
     X7 := RotateRight(t, 7) + RotateRight(X7, 11) + w + c;
   end;
 
-  procedure FF_5(var X7: Cardinal; X6, X5, X4, X3, X2, X1, X0, w, c: Cardinal); inline;
+  procedure FF_5(var X7: UInt32; X6, X5, X4, X3, X2, X1, X0, w, c: UInt32); inline;
   var
-    t: Cardinal;
+    t: UInt32;
   begin
     t := F_5(X2, X5, X0, X6, X4, X3, X1);
     X7 := RotateRight(t, 7) + RotateRight(X7, 11) + w + c;
   end;
 
 type
-  TArray32Cardinal = array[0..31] of Cardinal;
-  PArray32Cardinal = ^TArray32Cardinal;
+  TArray32UInt32 = array[0..31] of UInt32;
+  PArray32UInt32 = ^TArray32UInt32;
 var
-  B: PArray32Cardinal absolute BlockBuf;
-  T0, T1, T2, T3, T4, T5, T6, T7: Cardinal;
+  B: PArray32UInt32 absolute BlockBuf;
+  T0, T1, T2, T3, T4, T5, T6, T7: UInt32;
   PC: THashHAVALPassCount;
 begin
   Inc(FLength, 128);
@@ -482,7 +482,7 @@ end;
 
 function THashHAVAL.GetPadBuffer: TBytes;
 var
-  i, PadLen: Cardinal;
+  i, PadLen: UInt32;
   HashSizeInBits: Word;
   LengthinBits: UInt64;
 begin

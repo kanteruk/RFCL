@@ -16,17 +16,17 @@ type
   /// </summary>
   THashBobJenkins = class(THash)
   private
-    FContext: Cardinal;
-    FInitValue: Cardinal;
+    FContext: UInt32;
+    FInitValue: UInt32;
   protected
     procedure Initialize; override;
     procedure Update(const Buffer: Pointer; const Size: Cardinal); override;
     procedure Finalize; override;
-    class function HashLittle(const Data: Pointer; Len, InitVal: Cardinal): Cardinal; static; inline;
+    class function HashLittle(const Data: Pointer; Len, InitVal: UInt32): UInt32; static; inline;
   public
     class function HashType: THashType; override;
     function HashSize: Cardinal; override;
-    constructor Create(const AInitValue: Cardinal = 0); virtual;
+    constructor Create(const AInitValue: UInt32 = 0); virtual;
   end;
 
 { THashLookup3 }
@@ -47,7 +47,7 @@ begin
   Result := 4;
 end;
 
-constructor THashBobJenkins.Create(const AInitValue: Cardinal = 0);
+constructor THashBobJenkins.Create(const AInitValue: UInt32 = 0);
 begin
   FInitValue := AInitValue;
 end;
@@ -57,9 +57,9 @@ begin
   FContext := FInitValue;
 end;
 
-class function THashBobJenkins.HashLittle(const Data: Pointer; Len, InitVal: Cardinal): Cardinal;
+class function THashBobJenkins.HashLittle(const Data: Pointer; Len, InitVal: UInt32): UInt32;
 
-  procedure Mix(var a, b, c: Cardinal); inline;
+  procedure Mix(var a, b, c: UInt32); inline;
   begin
     Dec(a, c); a := a xor RotateLeft(c, 4); Inc(c, b);
     Dec(b, a); b := b xor RotateLeft(a, 6); Inc(a, c);
@@ -69,7 +69,7 @@ class function THashBobJenkins.HashLittle(const Data: Pointer; Len, InitVal: Car
     Dec(c, b); c := c xor RotateLeft(b, 4); Inc(b, a);
   end;
 
-  procedure Final(var a, b, c: Cardinal); inline;
+  procedure Final(var a, b, c: UInt32); inline;
   begin
     c := c xor b; Dec(c, RotateLeft(b,14));
     a := a xor c; Dec(a, RotateLeft(c,11));
@@ -84,26 +84,26 @@ class function THashBobJenkins.HashLittle(const Data: Pointer; Len, InitVal: Car
 type
   TByte12 = array[0..11] of Byte;
   PByte12 = ^TByte12;
-  TCardinal3 = array[0..2] of Cardinal;
+  TCardinal3 = array[0..2] of UInt32;
   PCardinal3 = ^TCardinal3;
 var
 {  pb: PByte;
-  pd: PCardinal absolute pb; }
+  pd: PUInt32 absolute pb; }
   pb: PByteArray;
   pd: PCardinal3 absolute pb;
-  a, b, c: Cardinal;
+  a, b, c: UInt32;
 label
   case_1, case_2, case_3, case_4, case_5, case_6,
   case_7, case_8, case_9, case_10, case_11, case_12;
 begin
-  a := Cardinal($DEADBEEF) + Len + InitVal;
+  a := UInt32($DEADBEEF) + Len + InitVal;
   b := a;
   c := a;
 
   pb := Data;
 
   // 4-byte aligned data
-  if (Cardinal(pb) and 3) = 0 then
+  if (UInt32(pb) and 3) = 0 then
   begin
     while Len > 12 do
     begin
