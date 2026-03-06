@@ -91,6 +91,8 @@ type
 
 implementation
 
+{$POINTERMATH ON}
+
 { THashSHA2 }
 
 class function THashSHA2.HashType: THashType;
@@ -152,7 +154,8 @@ const
 
 
 type
-  TArray16UINT = array[0..15] of UInt32;
+  TBlock = array[0..15] of UInt32;
+  PBlock = ^TBlock;
 var
   A, B, C, D, E, F, G, H: UInt32;
   W: array[0..63] of UInt32;
@@ -171,7 +174,7 @@ begin
   H := FState[7];
 
   for i := 0 to 15 do
-    W[i] := SwapEndian(TArray16UINT(Block^)[i]);
+    W[i] := SwapEndian(PBlock(Block)^[i]);
 
   for i := 16 to 63 do
   begin
@@ -284,7 +287,6 @@ begin
   FLength := 0;
 end;
 
-{$POINTERMATH ON}
 procedure THashSHA512.UpdateBlock(const Block: Pointer);
 const
   K512: array[0..79] of UInt64 = (
@@ -324,7 +326,8 @@ const
 
 
 type
-  TArray16UInt64 = array[0..15] of UInt64;
+  TBlock = array[0..15] of UInt64;
+  PBlock = ^TBlock;
 var
   A, B, C, D, E, F, G, H: UInt64;
   W: array[0..79] of UInt64;
@@ -343,7 +346,7 @@ begin
   H := FState[7];
 
   for i := 0 to 15 do
-    W[i] := SwapEndian(TArray16UInt64(Block^)[i]);
+    W[i] := SwapEndian(PBlock(Block)^[i]);
 
   for i := 16 to 79 do
   begin
